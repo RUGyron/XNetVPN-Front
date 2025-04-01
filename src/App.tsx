@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Shield, Globe, Zap, Server, ChevronRight, CheckCircle, Apple, Smartphone, Monitor, Download, X, User } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Shield, Globe, Zap, Server, ChevronRight, CheckCircle, Apple, Smartphone, Monitor, Download, X, User, CreditCard, Key, Lock } from 'lucide-react';
 
 type AuthMode = 'signin' | 'signup' | null;
 
@@ -8,9 +8,16 @@ interface AuthModalProps {
   onClose: () => void;
   mode: AuthMode;
   setMode: (mode: AuthMode) => void;
+  onLogin: () => void;
 }
 
-function AuthModal({ isOpen, onClose, mode, setMode }: AuthModalProps) {
+function AuthModal({ isOpen, onClose, mode, setMode, onLogin }: AuthModalProps) {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onLogin();
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -34,7 +41,7 @@ function AuthModal({ isOpen, onClose, mode, setMode }: AuthModalProps) {
           </p>
         </div>
 
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email
@@ -88,12 +95,22 @@ function AuthModal({ isOpen, onClose, mode, setMode }: AuthModalProps) {
             </p>
           )}
         </div>
+
+        <div className="mt-6 pt-6 text-xs text-center text-gray-500 border-t">
+          By continuing, you agree to our{' '}
+          <a href="#terms" className="underline hover:text-black">Terms of Service</a>
+        </div>
       </div>
     </div>
   );
 }
 
-function ProfilePage({ onClose }: { onClose: () => void }) {
+function ProfilePage({ onClose, onLogout }: { onClose: () => void; onLogout: () => void }) {
+  const handleSignOut = () => {
+    onLogout();
+    onClose();
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 relative">
@@ -149,7 +166,10 @@ function ProfilePage({ onClose }: { onClose: () => void }) {
           </div>
 
           <div className="flex justify-end space-x-4">
-            <button className="px-4 py-2 text-red-600 hover:underline">
+            <button 
+              onClick={handleSignOut}
+              className="px-4 py-2 text-red-600 hover:underline"
+            >
               Sign Out
             </button>
             <button className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition">
@@ -165,7 +185,19 @@ function ProfilePage({ onClose }: { onClose: () => void }) {
 function App() {
   const [authMode, setAuthMode] = useState<AuthMode>(null);
   const [showProfile, setShowProfile] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem('isLoggedIn') === 'true';
+  });
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    localStorage.setItem('isLoggedIn', 'true');
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem('isLoggedIn');
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -216,6 +248,45 @@ function App() {
         </div>
       </header>
 
+      {/* How It Works Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-bold text-center mb-16">How It Works</h2>
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto relative">
+            {/* Connecting Lines */}
+            <div className="hidden md:block absolute top-1/2 left-1/3 w-1/3 h-0.5 bg-gray-300"></div>
+            <div className="hidden md:block absolute top-1/2 right-1/3 w-1/3 h-0.5 bg-gray-300"></div>
+            
+            {/* Step 1 */}
+            <div className="text-center relative">
+              <div className="bg-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <CreditCard className="w-10 h-10 text-black" />
+              </div>
+              <h3 className="text-xl font-bold mb-4">1. Purchase</h3>
+              <p className="text-gray-600">Choose your plan and complete the purchase securely</p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="text-center relative">
+              <div className="bg-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <Key className="w-10 h-10 text-black" />
+              </div>
+              <h3 className="text-xl font-bold mb-4">2. Get Access Key</h3>
+              <p className="text-gray-600">Receive your unique access key via email</p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="text-center relative">
+              <div className="bg-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <Lock className="w-10 h-10 text-black" />
+              </div>
+              <h3 className="text-xl font-bold mb-4">3. Activate</h3>
+              <p className="text-gray-600">Enter your key in the app to start browsing securely</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Download Section */}
       <section className="py-20 bg-black text-white">
         <div className="container mx-auto px-4">
@@ -224,26 +295,26 @@ function App() {
             <p className="text-xl text-gray-300">Available on all major platforms</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <div className="text-center p-8 border border-gray-800 rounded-2xl hover:border-white transition flex flex-col h-full">
+            <div className="text-center p-8 border border-gray-800 rounded-2xl hover:border-white transition">
               <Apple className="w-12 h-12 mx-auto mb-4" />
               <h3 className="text-xl font-bold mb-4">iOS App</h3>
-              <button className="w-full mt-auto bg-white text-black h-12 rounded-full font-semibold hover:bg-gray-100 transition flex items-center justify-center space-x-2">
+              <button className="w-full bg-white text-black h-12 rounded-full font-semibold hover:bg-gray-100 transition flex items-center justify-center space-x-2">
                 <span>App Store</span>
                 <Download className="w-5 h-5" />
               </button>
             </div>
-            <div className="text-center p-8 border border-gray-800 rounded-2xl hover:border-white transition flex flex-col h-full">
+            <div className="text-center p-8 border border-gray-800 rounded-2xl hover:border-white transition">
               <Smartphone className="w-12 h-12 mx-auto mb-4" />
               <h3 className="text-xl font-bold mb-4">Android App</h3>
-              <button className="w-full mt-auto bg-white text-black h-12 rounded-full font-semibold hover:bg-gray-100 transition flex items-center justify-center space-x-2">
+              <button className="w-full bg-white text-black h-12 rounded-full font-semibold hover:bg-gray-100 transition flex items-center justify-center space-x-2">
                 <span>Google Play</span>
                 <Download className="w-5 h-5" />
               </button>
             </div>
-            <div className="text-center p-8 border border-gray-800 rounded-2xl hover:border-white transition flex flex-col h-full">
+            <div className="text-center p-8 border border-gray-800 rounded-2xl hover:border-white transition">
               <Monitor className="w-12 h-12 mx-auto mb-4" />
               <h3 className="text-xl font-bold mb-4">Windows App</h3>
-              <button className="w-full mt-auto bg-white text-black h-12 rounded-full font-semibold hover:bg-gray-100 transition flex items-center justify-center space-x-2">
+              <button className="w-full bg-white text-black h-12 rounded-full font-semibold hover:bg-gray-100 transition flex items-center justify-center space-x-2">
                 <span>Windows</span>
                 <Download className="w-5 h-5" />
               </button>
@@ -346,41 +417,25 @@ function App() {
       {/* Footer */}
       <footer className="bg-black text-white py-16">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-            <div className="text-center">
-              <h4 className="font-bold text-lg mb-4">Company</h4>
+          <div className="grid md:grid-cols-2 gap-12 mb-12">
+            <div>
+              <h4 className="font-bold text-lg mb-4">Legal Information</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="hover:text-gray-300 transition">About Us</a></li>
-                <li><a href="#" className="hover:text-gray-300 transition">Contact</a></li>
-                <li><a href="#" className="hover:text-gray-300 transition">Careers</a></li>
-                <li><a href="#" className="hover:text-gray-300 transition">Blog</a></li>
+                <li><a href="/terms" className="hover:text-gray-300 transition">Terms of Service</a></li>
+                <li><a href="/privacy" className="hover:text-gray-300 transition">Privacy Policy</a></li>
+                <li><a href="/refund" className="hover:text-gray-300 transition">Refund Policy</a></li>
               </ul>
             </div>
-            <div className="text-center">
-              <h4 className="font-bold text-lg mb-4">Support</h4>
+            <div>
+              <h4 className="font-bold text-lg mb-4">Contact Information</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="hover:text-gray-300 transition">Help Center</a></li>
-                <li><a href="#" className="hover:text-gray-300 transition">FAQ</a></li>
-                <li><a href="#" className="hover:text-gray-300 transition">Server Status</a></li>
-                <li><a href="#" className="hover:text-gray-300 transition">Contact Support</a></li>
-              </ul>
-            </div>
-            <div className="text-center">
-              <h4 className="font-bold text-lg mb-4">Legal</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="hover:text-gray-300 transition">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-gray-300 transition">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-gray-300 transition">Cookie Policy</a></li>
-                <li><a href="#" className="hover:text-gray-300 transition">GDPR</a></li>
-              </ul>
-            </div>
-            <div className="text-center">
-              <h4 className="font-bold text-lg mb-4">Download</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="hover:text-gray-300 transition">Windows App</a></li>
-                <li><a href="#" className="hover:text-gray-300 transition">iOS App</a></li>
-                <li><a href="#" className="hover:text-gray-300 transition">Android App</a></li>
-                <li><a href="#" className="hover:text-gray-300 transition">Linux App</a></li>
+                <li>Email: support@xnetvpn.com</li>
+                <li>Phone: +1 (555) 123-4567</li>
+                <li>Address: 123 Security Street, Cyber City, 12345</li>
+                <li className="text-sm text-gray-400 mt-4">
+                  Individual Entrepreneur John Smith<br />
+                  Tax ID: 123456789
+                </li>
               </ul>
             </div>
           </div>
@@ -397,20 +452,18 @@ function App() {
       {/* Auth Modal */}
       <AuthModal 
         isOpen={authMode !== null}
-        onClose={() => {
-          setAuthMode(null);
-          // Temporary demo login
-          if (authMode === 'signin') {
-            setIsLoggedIn(true);
-          }
-        }}
+        onClose={() => setAuthMode(null)}
         mode={authMode}
         setMode={setAuthMode}
+        onLogin={handleLogin}
       />
 
       {/* Profile Modal */}
       {showProfile && (
-        <ProfilePage onClose={() => setShowProfile(false)} />
+        <ProfilePage 
+          onClose={() => setShowProfile(false)} 
+          onLogout={handleLogout}
+        />
       )}
     </div>
   );
