@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Shield, Globe, Zap, Server, ChevronRight, CheckCircle, Apple, Smartphone, Monitor, Download, X, User, CreditCard, Key, Lock } from 'lucide-react';
+import React, { useState } from 'react';
+import { Globe, Zap, Server, ChevronRight, CheckCircle, Apple, Smartphone, Monitor, Download, X, User, CreditCard, Key, Lock } from 'lucide-react';
+import {ScrollToHash} from "./utils/funcs.tsx";
 
 type AuthMode = 'signin' | 'signup' | null;
 
@@ -206,7 +207,8 @@ function App() {
         <div className="container mx-auto px-4">
           <nav className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
-              <Shield className="w-8 h-8" />
+              {/*<Shield className="w-8 h-8" />*/}
+              <img src={"shield.svg"} alt={"shield"} width={25} height={25} />
               <span className="text-2xl font-bold">XNet</span>
             </div>
             {isLoggedIn ? (
@@ -240,7 +242,18 @@ function App() {
               >
                 Try Free <ChevronRight className="ml-2" />
               </button>
-              <button className="border border-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition">
+              <button
+                  onClick={() => {
+                    const el = document.getElementById("pricing");
+                    if (el) {
+                      el.scrollIntoView({behavior: "smooth"});
+                    } else {
+                      // если элемент еще не отрисован — можно запомнить якорь
+                      location.href = "/#pricing";
+                    }
+                  }}
+                  className="border border-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition"
+              >
                 View Plans
               </button>
             </div>
@@ -353,7 +366,7 @@ function App() {
       </section>
 
       {/* Pricing Section */}
-      <section className="py-20">
+      <section className="py-20" id="pricing">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-12">Simple Pricing</h2>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -418,42 +431,37 @@ function App() {
       <footer className="bg-black text-white py-16">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 mb-12">
-            <div>
+            <div className="md:justify-self-start">
               <h4 className="font-bold text-lg mb-4">Legal Information</h4>
               <ul className="space-y-2">
-                <li><a href="/terms" className="hover:text-gray-300 transition">Terms of Service</a></li>
-                <li><a href="/privacy" className="hover:text-gray-300 transition">Privacy Policy</a></li>
-                <li><a href="/refund" className="hover:text-gray-300 transition">Refund Policy</a></li>
+                <li><a href="/privacy-terms/#terms" className="hover:text-gray-300 transition">Terms of Service</a></li>
+                <li><a href="/privacy-terms" className="hover:text-gray-300 transition">Privacy Policy</a></li>
+                <li><a href="/privacy-terms/#refund" className="hover:text-gray-300 transition">Refund Policy</a></li>
               </ul>
             </div>
-            <div>
+            <div className="md:justify-self-end md:text-right">
               <h4 className="font-bold text-lg mb-4">Contact Information</h4>
               <ul className="space-y-2">
-                <li>Email: support@xnetvpn.com</li>
-                <li>Phone: +1 (555) 123-4567</li>
-                <li>Address: 123 Security Street, Cyber City, 12345</li>
-                <li className="text-sm text-gray-400 mt-4">
-                  Individual Entrepreneur John Smith<br />
-                  Tax ID: 123456789
-                </li>
+                <li>Email: <a className="hover:text-gray-300 transition" href={"mailto:support@xnetapps.com"}>support@xnetapps.com</a></li>
+                <li>Address: 53 Nikola Dumana Street, Yerevan, Armenia, 0001</li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="border-t border-gray-800 mt-16 pt-12 flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <Shield className="w-6 h-6" />
+              <img src={"shield.svg"} alt={"shield"} width={25} height={25}/>
               <span className="text-xl font-bold">XNet</span>
             </div>
-            <div className="text-sm text-gray-400">© 2024 XNet VPN. All rights reserved.</div>
+            <div className="text-sm text-gray-400">© 2025 XNet VPN. All rights reserved.</div>
           </div>
         </div>
       </footer>
 
       {/* Auth Modal */}
-      <AuthModal 
-        isOpen={authMode !== null}
-        onClose={() => setAuthMode(null)}
-        mode={authMode}
+      <AuthModal
+          isOpen={authMode !== null}
+          onClose={() => setAuthMode(null)}
+          mode={authMode}
         setMode={setAuthMode}
         onLogin={handleLogin}
       />
@@ -465,6 +473,8 @@ function App() {
           onLogout={handleLogout}
         />
       )}
+
+      <ScrollToHash/>
     </div>
   );
 }
