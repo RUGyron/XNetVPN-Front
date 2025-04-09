@@ -1,8 +1,8 @@
 import { Shield, ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import {ScrollToHash} from "./utils/funcs.tsx";
+import {ScrollToHash} from "../utils/funcs.tsx";
 
-function PrivacyTerms() {
+function PrivacyTermsPage() {
     const navigate = useNavigate();
 
     return (
@@ -169,4 +169,4 @@ function PrivacyTerms() {
     );
 }
 
-export default PrivacyTerms;
+export default PrivacyTermsPage;
