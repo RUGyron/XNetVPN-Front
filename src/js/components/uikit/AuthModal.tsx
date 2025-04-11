@@ -7,6 +7,7 @@ import Cookies from "js-cookie"
 import login from "../../api/login.tsx"
 import {Dictionary} from "../../utils/localization.tsx"
 import {motion} from 'framer-motion'
+import clickOutsideHandler from "../../utils/clickOutsideHandler.tsx";
 
 interface AuthProps {
     showed: boolean
@@ -22,18 +23,7 @@ export default function AuthModal({showed, onClose}: AuthProps) {
     const [processing, setProcessing] = useState<boolean>(false)
     const modalRef = useRef<HTMLDivElement | null>(null)
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-                onClose()
-            }
-        }
-
-        document.addEventListener("mousedown", handleClickOutside)
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside)
-        }
-    }, [onClose])
+    useEffect(() => clickOutsideHandler(modalRef, onClose), [onClose])
 
     const onLoginSubmit = async (e: FormEvent) => {
         e.preventDefault()

@@ -18,14 +18,12 @@ export class AuthModel {
     }
 
     static fromApi(data: any): AuthModel {
-        const e =  new AuthModel({
+         return new AuthModel({
             tokens: {
                 access: data.tokens.access_token,
                 refresh: data.tokens.refresh_token
             },
             profile: ProfileModel.fromApi(data.user)
         })
-        console.log(e)
-        return e
     }
 }

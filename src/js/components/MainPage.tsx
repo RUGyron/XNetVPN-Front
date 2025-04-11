@@ -3,7 +3,6 @@ import {
     Globe,
     Zap,
     Server,
-    ChevronRight,
     CheckCircle,
     Apple,
     Smartphone,
@@ -18,18 +17,24 @@ import {
 import Config from "../utils/Config.tsx"
 import {ScrollToHash} from "../utils/funcs.tsx"
 import AuthModal from "./uikit/AuthModal.tsx"
-// import Profile from "./uikit/Profile.tsx"
 // import {useNavigate} from "react-router-dom"
-// import {useGlobalContext} from "../utils/useGlobalProvider.tsx"
+import {useGlobalContext} from "../utils/useGlobalProvider.tsx"
 import {GlobalContext} from "../utils/GlobalProvider.tsx"
 import {AnimatePresence} from 'framer-motion'
+import ProfileModal from "./uikit/ProfileModal.tsx";
+import {Toaster} from 'sonner'
+import {Dictionary, DictionaryKey} from "../utils/localization.tsx";
+import SubscriptionModal from "./uikit/SubscriptionModal.tsx";
+import scrollTo from "../utils/scrollTo.tsx";
+import {SubscriptionModel} from "../models/SubscriptionModel.tsx";
 
 function MainPage() {
     // const navigate = useNavigate()
-    // const globalContext = useGlobalContext()
+    const globalContext = useGlobalContext()
     const {loggedIn} = useContext(GlobalContext)
     const [authShowed, setAuthShowed] = useState<boolean>(false)
     const [profileShowed, setProfileShowed] = useState<boolean>(false)
+    const [subShowed, setSubShowed] = useState<SubscriptionModel | null>(null)
 
     return (
         <div className="min-h-screen bg-white">
@@ -57,7 +62,7 @@ function MainPage() {
                                 }}
                                 className="bg-white text-black px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition"
                             >
-                                Get Started
+                                Sign In
                             </button>
                         )}
                     </nav>
@@ -75,18 +80,10 @@ function MainPage() {
                                 }}
                                 className="bg-white text-black px-8 py-3 rounded-full font-semibold flex items-center hover:bg-gray-100 transition"
                             >
-                                Try Free <ChevronRight className="ml-2"/>
+                                Get Started
                             </button>
                             <button
-                                onClick={() => {
-                                    const el = document.getElementById("pricing");
-                                    if (el) {
-                                        el.scrollIntoView({behavior: "smooth"});
-                                    } else {
-                                        // если элемент еще не отрисован — можно запомнить якорь
-                                        location.href = "/#pricing";
-                                    }
-                                }}
+                                onClick={() => scrollTo('pricing')}
                                 className="border border-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition"
                             >
                                 View Plans
@@ -216,18 +213,22 @@ function MainPage() {
                     <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                         {/* Basic Plan */}
                         <div className="border rounded-2xl p-8 hover:shadow-lg transition flex flex-col h-full">
-                            <h3 className="text-xl font-bold mb-4">Basic</h3>
-                            <div className="text-4xl font-bold mb-4">$5<span
-                                className="text-lg text-gray-500">/mo</span></div>
+                            <h3 className="text-xl font-bold mb-4">{globalContext.subscriptions?.basic.name}</h3>
+                            <div className="text-4xl font-bold mb-4">${globalContext.subscriptions?.basic.annuallyPrice}<span className="text-lg text-gray-500">/mo</span></div>
                             <ul className="space-y-3 mb-8 flex-grow">
-                                {['5 Locations', 'Basic Speed', '1 Device'].map((feature) => (
+                                {globalContext.subscriptions?.basic.benefits.map((feature) => (
                                     <li key={feature} className="flex items-center">
                                         <CheckCircle className="w-5 h-5 mr-2 text-black"/>
-                                        {feature}
+                                        {globalContext.localized(Dictionary[feature as DictionaryKey])}
                                     </li>
                                 ))}
                             </ul>
                             <button
+                                onClick={() => {
+                                    if (globalContext.subscriptions) {
+                                        setSubShowed(globalContext.subscriptions?.basic)
+                                    }
+                                }}
                                 className="w-full h-12 border border-black rounded-full hover:bg-black hover:text-white transition">
                                 Select Plan
                             </button>
@@ -240,37 +241,51 @@ function MainPage() {
                                 className="absolute top-0 right-0 bg-black text-white px-4 py-1 rounded-bl-lg rounded-tr-xl text-sm">
                                 Popular
                             </div>
-                            <h3 className="text-xl font-bold mb-4">Pro</h3>
-                            <div className="text-4xl font-bold mb-4">$10<span
+                            <h3 className="text-xl font-bold mb-4">{globalContext.subscriptions?.pro.name}</h3>
+                            <div className="text-4xl font-bold mb-4">${globalContext.subscriptions?.pro.annuallyPrice}<span
                                 className="text-lg text-gray-500">/mo</span></div>
                             <ul className="space-y-3 mb-8 flex-grow">
-                                {['All Locations', 'Fast Speed', '5 Devices', 'Priority Support'].map((feature) => (
+                                {globalContext.subscriptions?.pro.benefits.map((feature) => (
                                     <li key={feature} className="flex items-center">
                                         <CheckCircle className="w-5 h-5 mr-2 text-black"/>
-                                        {feature}
+                                        {globalContext.localized(Dictionary[feature as DictionaryKey])}
                                     </li>
                                 ))}
                             </ul>
                             <button
+                                onClick={() => {
+                                    if (globalContext.subscriptions) {
+                                        setSubShowed(globalContext.subscriptions?.pro)
+                                    }
+                                }}
                                 className="w-full h-12 bg-black text-white rounded-full hover:bg-gray-800 transition">
                                 Select Plan
                             </button>
                         </div>
 
-                        {/* Enterprise Plan */}
+                        {/* Unlimited Plan */}
                         <div className="border rounded-2xl p-8 hover:shadow-lg transition flex flex-col h-full">
-                            <h3 className="text-xl font-bold mb-4">Enterprise</h3>
-                            <div className="text-4xl font-bold mb-4">$20<span
+                            <h3 className="text-xl font-bold mb-4">{globalContext.subscriptions?.unlimited.name}</h3>
+                            <div className="text-4xl font-bold mb-4">${globalContext.subscriptions?.unlimited.annuallyPrice}<span
                                 className="text-lg text-gray-500">/mo</span></div>
                             <ul className="space-y-3 mb-8 flex-grow">
-                                {['All Locations', 'Ultra Speed', 'Unlimited Devices', '24/7 Support', 'Custom Setup'].map((feature) => (
+                                {globalContext.subscriptions?.unlimited.benefits.map((feature, index) => (
                                     <li key={feature} className="flex items-center">
-                                        <CheckCircle className="w-5 h-5 mr-2 text-black"/>
-                                        {feature}
+                                        {index === 0 ? (
+                                            <img src={"./img/ai.png"} className="w-5 h-5 mr-2" alt="ai"/>
+                                        ) : (
+                                            <CheckCircle className="w-5 h-5 mr-2 text-black"/>
+                                        )}
+                                        {globalContext.localized(Dictionary[feature as DictionaryKey])}
                                     </li>
                                 ))}
                             </ul>
                             <button
+                                onClick={() => {
+                                    if (globalContext.subscriptions) {
+                                        setSubShowed(globalContext.subscriptions?.unlimited)
+                                    }
+                                }}
                                 className="w-full h-12 border border-black rounded-full hover:bg-black hover:text-white transition">
                                 Select Plan
                             </button>
@@ -324,12 +339,28 @@ function MainPage() {
             </AnimatePresence>
 
             {/* Profile Modal */}
-            {/*{showProfile && (*/}
-            {/*    <Profile*/}
-            {/*        onClose={() => setShowProfile(false)}*/}
-            {/*        onLogout={handleLogout}*/}
-            {/*    />*/}
-            {/*)}*/}
+            <AnimatePresence>
+                {profileShowed && (
+                    <ProfileModal showed={profileShowed} onClose={() => setProfileShowed(false)}/>
+                )}
+            </AnimatePresence>
+
+            {/* Sub Modal */}
+            <AnimatePresence>
+                {subShowed && (
+                    <SubscriptionModal defaultSub={subShowed} onClose={() => setSubShowed(null)}/>
+                )}
+            </AnimatePresence>
+
+            <Toaster
+                duration={5000}
+                toastOptions={{
+                    className: 'text-base px-6 py-4 rounded-xl shadow-lg',
+                    style: {
+                        fontSize: '15px',
+                    },
+                }}
+            />
 
             <ScrollToHash/>
         </div>

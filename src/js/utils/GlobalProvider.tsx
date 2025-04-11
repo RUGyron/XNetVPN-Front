@@ -2,17 +2,18 @@ import React, {useState, useEffect, createContext, useMemo} from 'react'
 import {ProfileModel} from "../models/ProfileModel.tsx"
 import fetchAndHandleProfile from "./fetchAndHandleProfile.tsx";
 import fetchSubscriptions from "../api/subscriptions.tsx";
-import {SubscriptionModel} from "../models/SubscriptionModel.tsx";
-import Language from "../enums/language.tsx";
-import {createLocalizer, DictionaryEntry} from "./localization.tsx";
+import {SubscriptionModel, SubscriptionsModel} from "../models/SubscriptionModel.tsx";
+import Language from "../enums/language.tsx"
+import {DictionaryEntry} from "./localization.tsx"
+import createLocalizer from "./createLocalizer.tsx"
 
 export interface GlobalState {
     loggedIn: boolean
     setLoggedIn: (loggedIn: boolean) => void
     profile: null | ProfileModel
     setProfile: (profile: null | ProfileModel) => void
-    subscriptions: null | SubscriptionModel[]
-    setSubscriptions: (profile: null | SubscriptionModel[]) => void
+    subscriptions: null | SubscriptionsModel
+    setSubscriptions: (profile: null | SubscriptionsModel) => void
     loading: boolean
     language: Language
     setLanguage: (language: Language) => void
@@ -39,7 +40,7 @@ export const GlobalContext = createContext<GlobalState>({
 export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
     const [loggedIn, setLoggedIn] = useState<boolean>(false)
     const [profile, setProfile] = useState<null | ProfileModel>(null)
-    const [subscriptions, setSubscriptions] = useState<null | SubscriptionModel[]>(null)
+    const [subscriptions, setSubscriptions] = useState<null | SubscriptionsModel>(null)
     const [loading, setLoading] = useState(true)
     const [language, setLanguage] = useState<Language>(Language.english)
     const localized = useMemo(() => createLocalizer(language), [language])
@@ -47,15 +48,12 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
     const handleSubscriptions = async () => {
         return fetchSubscriptions()
             .then((subscriptionsFetched: SubscriptionModel[]) => {
-                setSubscriptions(subscriptionsFetched)
+                setSubscriptions(SubscriptionsModel.fromArray(subscriptionsFetched))
             })
             .catch(() => {
-                setSubscriptions([]);
+                setSubscriptions(null);
             });
     }
-
-    useEffect(() => {
-    }, [])
 
     const value: GlobalState = {
         loggedIn,
