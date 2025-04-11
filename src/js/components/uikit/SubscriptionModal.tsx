@@ -124,7 +124,7 @@ export default function SubscriptionModal({defaultSub, onClose}: SubscriptionPro
                                         <div className="text-center sm:text-left">
                                             <p className="font-bold">{selectedSub?.name}</p>
                                             <p className="text-sm text-gray-600">
-                                                {globalContext.localized(Dictionary[selectedSub?.benefits[0] as DictionaryKey])}
+                                                {globalContext.localized(Dictionary[selectedSub?.benefits[2] as DictionaryKey])}
                                             </p>
                                         </div>
 
