@@ -11,7 +11,7 @@ import {
     User,
     CreditCard,
     Key,
-    Lock
+    Lock, Loader2
 } from 'lucide-react'
 
 import Config from "../utils/Config.tsx"
@@ -27,6 +27,9 @@ import {Dictionary, DictionaryKey} from "../utils/localization.tsx";
 import SubscriptionModal from "./uikit/SubscriptionModal.tsx";
 import scrollTo from "../utils/scrollTo.tsx";
 import {SubscriptionModel} from "../models/SubscriptionModel.tsx";
+import Skeleton from "./uikit/Skeleton.tsx";
+import AnimatedDouble from "./uikit/AnimatedDouble.tsx";
+import switchModals from "../utils/switchModals.tsx";
 
 function MainPage() {
     // const navigate = useNavigate()
@@ -47,7 +50,14 @@ function MainPage() {
                             <img src={"img/shield.svg"} alt={"shield"} width={25} height={25}/>
                             <span className="text-2xl font-bold">XNet</span>
                         </div>
-                        {loggedIn ? (
+                        {loggedIn === null ? (
+                            <button
+                                disabled={true}
+                                className="bg-gray-200 text-black px-6 py-2.5 rounded-full font-semibold hover:bg-gray-100 transition"
+                            >
+                                <Loader2 className="animate-spin w-5 h-5"/>
+                            </button>
+                            ) : loggedIn ? (
                             <button
                                 onClick={() => setProfileShowed(true)}
                                 className="bg-white text-black px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition flex items-center"
@@ -74,14 +84,29 @@ function MainPage() {
                             Military-grade encryption, unlimited bandwidth, and servers worldwide.
                         </p>
                         <div className="flex justify-center space-x-4">
-                            <button
-                                onClick={() => {
-                                    setAuthShowed(true)
-                                }}
-                                className="bg-white text-black px-8 py-3 rounded-full font-semibold flex items-center hover:bg-gray-100 transition"
-                            >
-                                Get Started
-                            </button>
+                            {globalContext.subscriptions ? (() => {
+                                const sub = globalContext.subscriptions?.pro
+                                if (!sub) return
+                                return <button
+                                    onClick={() => {
+                                        if (!globalContext.loggedIn) {
+                                            setAuthShowed(true)
+                                        } else {
+                                            setSubShowed(sub)
+                                        }
+                                    }}
+                                    className="bg-white text-black px-8 py-3 rounded-full font-semibold flex items-center hover:bg-gray-100 transition"
+                                >
+                                    Get Started
+                                </button>
+                            })() : (
+                                <button
+                                    disabled={true}
+                                    className="bg-gray-200 text-black px-8 py-3 rounded-full font-semibold flex items-center hover:bg-gray-100 transition"
+                                >
+                                    <Loader2 className="animate-spin w-5 h-5"/>
+                                </button>
+                            )}
                             <button
                                 onClick={() => scrollTo('pricing')}
                                 className="border border-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition"
@@ -99,8 +124,8 @@ function MainPage() {
                     <h2 className="text-4xl font-bold text-center mb-16">How It Works</h2>
                     <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto relative">
                         {/* Connecting Lines */}
-                        <div className="hidden md:block absolute top-1/2 left-1/3 w-1/3 h-0.5 bg-gray-300"></div>
-                        <div className="hidden md:block absolute top-1/2 right-1/3 w-1/3 h-0.5 bg-gray-300"></div>
+                        <div className="hidden md:hidden lg:block absolute top-1/2 left-1/3 w-1/3 h-0.5 bg-gray-300"></div>
+                        <div className="hidden md:hidden lg:block absolute top-1/2 right-1/3 w-1/3 h-0.5 bg-gray-300"></div>
 
                         {/* Step 1 */}
                         <div className="text-center relative">
@@ -213,20 +238,39 @@ function MainPage() {
                     <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                         {/* Basic Plan */}
                         <div className="border rounded-2xl p-8 hover:shadow-lg transition flex flex-col h-full">
-                            <h3 className="text-xl font-bold mb-4">{globalContext.subscriptions?.basic.name}</h3>
-                            <div className="text-4xl font-bold mb-4">${globalContext.subscriptions?.basic.annuallyPrice}<span className="text-lg text-gray-500">/mo</span></div>
+                            <h3 className="text-xl font-bold mb-4">{globalContext.subscriptions?.basic.name ?? <Skeleton className="h-8 w-1/3" />}</h3>
+                            <div className="text-4xl font-bold mb-4">
+                                {globalContext.subscriptions ? (
+                                    <>
+                                        <AnimatedDouble value={globalContext.subscriptions.basic.annuallyPrice} prefix={"$"}/>
+                                        <span className="text-lg text-gray-500">/mo</span>
+                                    </>
+                                ) : (
+                                    <Skeleton className="h-10 w-2/3" />
+                                )}
+                            </div>
                             <ul className="space-y-3 mb-8 flex-grow">
-                                {globalContext.subscriptions?.basic.benefits.map((feature) => (
-                                    <li key={feature} className="flex items-center">
-                                        <CheckCircle className="w-5 h-5 mr-2 text-black"/>
-                                        {globalContext.localized(Dictionary[feature as DictionaryKey])}
-                                    </li>
-                                ))}
+                                {globalContext.subscriptions ? (
+                                    globalContext.subscriptions.basic.benefits.map((feature) => (
+                                            <li key={feature} className="flex items-center">
+                                                <CheckCircle className="w-5 h-5 mr-2 text-black"/>
+                                                {globalContext.localized(Dictionary[feature as DictionaryKey])}
+                                            </li>
+                                        ))
+                                ) : (
+                                    [...Array(5)].map(() => (
+                                        <Skeleton className={"w-full h-6"}/>
+                                    ))
+                                )}
                             </ul>
                             <button
                                 onClick={() => {
-                                    if (globalContext.subscriptions) {
-                                        setSubShowed(globalContext.subscriptions?.basic)
+                                    if (loggedIn) {
+                                        if (globalContext.subscriptions) {
+                                            setSubShowed(globalContext.subscriptions?.basic)
+                                        }
+                                    } else {
+                                        setAuthShowed(true)
                                     }
                                 }}
                                 className="w-full h-12 border border-black rounded-full hover:bg-black hover:text-white transition">
@@ -241,21 +285,39 @@ function MainPage() {
                                 className="absolute top-0 right-0 bg-black text-white px-4 py-1 rounded-bl-lg rounded-tr-xl text-sm">
                                 Popular
                             </div>
-                            <h3 className="text-xl font-bold mb-4">{globalContext.subscriptions?.pro.name}</h3>
-                            <div className="text-4xl font-bold mb-4">${globalContext.subscriptions?.pro.annuallyPrice}<span
-                                className="text-lg text-gray-500">/mo</span></div>
+                            <h3 className="text-xl font-bold mb-4">{globalContext.subscriptions?.pro.name ?? <Skeleton className="h-8 w-1/3" />}</h3>
+                            <div className="text-4xl font-bold mb-4">
+                                {globalContext.subscriptions ? (
+                                    <>
+                                        <AnimatedDouble value={globalContext.subscriptions.pro.annuallyPrice} prefix={"$"}/>
+                                        <span className="text-lg text-gray-500">/mo</span>
+                                    </>
+                                ) : (
+                                    <Skeleton className="h-10 w-2/3" />
+                                )}
+                            </div>
                             <ul className="space-y-3 mb-8 flex-grow">
-                                {globalContext.subscriptions?.pro.benefits.map((feature) => (
-                                    <li key={feature} className="flex items-center">
-                                        <CheckCircle className="w-5 h-5 mr-2 text-black"/>
-                                        {globalContext.localized(Dictionary[feature as DictionaryKey])}
-                                    </li>
-                                ))}
+                                {globalContext.subscriptions ? (
+                                    globalContext.subscriptions.pro.benefits.map((feature) => (
+                                        <li key={feature} className="flex items-center">
+                                            <CheckCircle className="w-5 h-5 mr-2 text-black"/>
+                                            {globalContext.localized(Dictionary[feature as DictionaryKey])}
+                                        </li>
+                                    ))
+                                ) : (
+                                    [...Array(5)].map(() => (
+                                        <Skeleton className={"w-full h-6"}/>
+                                    ))
+                                )}
                             </ul>
                             <button
                                 onClick={() => {
-                                    if (globalContext.subscriptions) {
-                                        setSubShowed(globalContext.subscriptions?.pro)
+                                    if (loggedIn) {
+                                        if (globalContext.subscriptions) {
+                                            setSubShowed(globalContext.subscriptions?.pro)
+                                        }
+                                    } else {
+                                        setAuthShowed(true)
                                     }
                                 }}
                                 className="w-full h-12 bg-black text-white rounded-full hover:bg-gray-800 transition">
@@ -265,25 +327,43 @@ function MainPage() {
 
                         {/* Unlimited Plan */}
                         <div className="border rounded-2xl p-8 hover:shadow-lg transition flex flex-col h-full">
-                            <h3 className="text-xl font-bold mb-4">{globalContext.subscriptions?.unlimited.name}</h3>
-                            <div className="text-4xl font-bold mb-4">${globalContext.subscriptions?.unlimited.annuallyPrice}<span
-                                className="text-lg text-gray-500">/mo</span></div>
+                            <h3 className="text-xl font-bold mb-4">{globalContext.subscriptions?.unlimited.name ?? <Skeleton className="h-8 w-1/3" />}</h3>
+                            <div className="text-4xl font-bold mb-4">
+                                {globalContext.subscriptions ? (
+                                    <>
+                                        <AnimatedDouble value={globalContext.subscriptions.unlimited.annuallyPrice} prefix={"$"}/>
+                                        <span className="text-lg text-gray-500">/mo</span>
+                                    </>
+                                ) : (
+                                    <Skeleton className="h-10 w-2/3" />
+                                )}
+                            </div>
                             <ul className="space-y-3 mb-8 flex-grow">
-                                {globalContext.subscriptions?.unlimited.benefits.map((feature, index) => (
-                                    <li key={feature} className="flex items-center">
-                                        {index === 0 ? (
-                                            <img src={"./img/ai.png"} className="w-5 h-5 mr-2" alt="ai"/>
-                                        ) : (
-                                            <CheckCircle className="w-5 h-5 mr-2 text-black"/>
-                                        )}
-                                        {globalContext.localized(Dictionary[feature as DictionaryKey])}
-                                    </li>
-                                ))}
+                                {globalContext.subscriptions ? (
+                                    globalContext.subscriptions.unlimited.benefits.map((feature, index) => (
+                                        <li key={feature} className="flex items-center">
+                                            {index === 0 ? (
+                                                <img src={"./img/ai.png"} className="w-5 h-5 mr-2" alt="ai"/>
+                                            ) : (
+                                                <CheckCircle className="w-5 h-5 mr-2 text-black"/>
+                                            )}
+                                            {globalContext.localized(Dictionary[feature as DictionaryKey])}
+                                        </li>
+                                    ))
+                                ) : (
+                                    [...Array(5)].map(() => (
+                                        <Skeleton className={"w-full h-6"}/>
+                                    ))
+                                )}
                             </ul>
                             <button
                                 onClick={() => {
-                                    if (globalContext.subscriptions) {
-                                        setSubShowed(globalContext.subscriptions?.unlimited)
+                                    if (loggedIn) {
+                                        if (globalContext.subscriptions) {
+                                            setSubShowed(globalContext.subscriptions?.unlimited)
+                                        }
+                                    } else {
+                                        setAuthShowed(true)
                                     }
                                 }}
                                 className="w-full h-12 border border-black rounded-full hover:bg-black hover:text-white transition">
@@ -334,14 +414,22 @@ function MainPage() {
             {/* Auth Modal */}
             <AnimatePresence>
                 {authShowed && (
-                    <AuthModal showed={authShowed} onClose={() => setAuthShowed(false)}/>
+                    <AuthModal
+                        showed={authShowed}
+                        onClose={() => setAuthShowed(false)}
+                        onAuth={() => switchModals(() => setAuthShowed(false), () => setProfileShowed(true))}
+                    />
                 )}
             </AnimatePresence>
 
             {/* Profile Modal */}
             <AnimatePresence>
                 {profileShowed && (
-                    <ProfileModal showed={profileShowed} onClose={() => setProfileShowed(false)}/>
+                    <ProfileModal
+                        showed={profileShowed}
+                        onClose={() => setProfileShowed(false)}
+                        onSubChosen={() => switchModals(() => setProfileShowed(false), () => setSubShowed(globalContext.subscriptions?.pro ?? null))}
+                    />
                 )}
             </AnimatePresence>
 

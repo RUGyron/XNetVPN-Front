@@ -12,9 +12,10 @@ import clickOutsideHandler from "../../utils/clickOutsideHandler.tsx";
 interface AuthProps {
     showed: boolean
     onClose: () => void
+    onAuth: () => void
 }
 
-export default function AuthModal({showed, onClose}: AuthProps) {
+export default function AuthModal({showed, onClose, onAuth}: AuthProps) {
 
     // const navigate = useNavigate()
     const globalContext = useGlobalContext()
@@ -37,7 +38,7 @@ export default function AuthModal({showed, onClose}: AuthProps) {
             globalContext.setLoggedIn(true)
             globalContext.setProfile(auth.profile)
             setErrorKey('')
-            onClose()
+            onAuth()
         } catch (e: any) {
             switch (await e.response.data.code) {
                 case 2: // 400

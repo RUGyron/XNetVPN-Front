@@ -1,4 +1,6 @@
-const clickOutsideHandler = (modalRef, onClose) => {
+import {MutableRefObject} from "react"
+
+const clickOutsideHandler = (modalRef: MutableRefObject<HTMLDivElement | null>, onClose: () => void) => {
     const handleClickOutside = (event: MouseEvent) => {
         if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
             onClose()

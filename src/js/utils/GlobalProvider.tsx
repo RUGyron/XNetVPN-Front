@@ -8,7 +8,7 @@ import {DictionaryEntry} from "./localization.tsx"
 import createLocalizer from "./createLocalizer.tsx"
 
 export interface GlobalState {
-    loggedIn: boolean
+    loggedIn: boolean | null
     setLoggedIn: (loggedIn: boolean) => void
     profile: null | ProfileModel
     setProfile: (profile: null | ProfileModel) => void
@@ -25,7 +25,7 @@ interface GlobalProviderProps {
 }
 
 export const GlobalContext = createContext<GlobalState>({
-    loggedIn: false,
+    loggedIn: null,
     setLoggedIn: () => {},
     profile: null,
     setProfile: () => {},
@@ -38,7 +38,7 @@ export const GlobalContext = createContext<GlobalState>({
 })
 
 export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
-    const [loggedIn, setLoggedIn] = useState<boolean>(false)
+    const [loggedIn, setLoggedIn] = useState<boolean | null>(null)
     const [profile, setProfile] = useState<null | ProfileModel>(null)
     const [subscriptions, setSubscriptions] = useState<null | SubscriptionsModel>(null)
     const [loading, setLoading] = useState(true)

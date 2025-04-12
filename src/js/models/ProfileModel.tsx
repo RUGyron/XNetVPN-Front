@@ -1,9 +1,9 @@
 export interface ProfileInterface {
     id: string
     subscription: Subscription
-    subscriptionExpiresAt: null
+    subscriptionExpiresAt: Date | null
     devices: Device[]
-    createdAt: null
+    createdAt: Date
 }
 
 interface Device {
@@ -20,9 +20,9 @@ interface Subscription {
 export class ProfileModel {
     id: string
     subscription: Subscription
-    subscriptionExpiresAt: null
+    subscriptionExpiresAt: Date | null
     devices: Device[]
-    createdAt: null
+    createdAt: Date
 
     constructor(data: ProfileInterface) {
         this.id = data.id
@@ -36,9 +36,9 @@ export class ProfileModel {
         return new ProfileModel({
             id: data.id,
             subscription: data.subscription,
-            subscriptionExpiresAt: data.subscription_expires_at,
+            subscriptionExpiresAt: data.created_at ? new Date(data.subscription_expires_at) : null,
             devices: data.devices,
-            createdAt: data.created_at,
+            createdAt: new Date(data.created_at),
         });
     }
 }
