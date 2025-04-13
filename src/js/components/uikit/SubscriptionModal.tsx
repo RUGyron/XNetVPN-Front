@@ -112,7 +112,7 @@ export default function SubscriptionModal({defaultSub, onClose}: SubscriptionPro
                                 {/* Header */}
 
                                 <div className="text-center mb-8">
-                                    <h2 className="text-2xl font-bold mb-2">Choose Plan</h2>
+                                    <h2 className="text-2xl font-bold mb-2">{globalContext.localized(Dictionary.subTitle)}</h2>
                                 </div>
 
                                 {/* First Block */}
@@ -134,8 +134,8 @@ export default function SubscriptionModal({defaultSub, onClose}: SubscriptionPro
                                                 value={selectedSubPeriod}
                                                 onChange={setSelectedSubPeriod}
                                                 options={{
-                                                    monthly: "Monthly",
-                                                    annually: "Annually"
+                                                    monthly: globalContext.localized(Dictionary.subMonthly),
+                                                    annually: globalContext.localized(Dictionary.subAnnually)
                                                 }}
                                                 horizontalPadding={8}
                                                 height={35}
@@ -145,7 +145,7 @@ export default function SubscriptionModal({defaultSub, onClose}: SubscriptionPro
                                     </div>
                                     <div
                                         className="border-t pt-3 flex justify-between items-center text-sm font-medium text-gray-800">
-                                        <span>You pay now</span>
+                                        <span>{globalContext.localized(Dictionary.subPayNow)}</span>
                                         <span className="flex items-center gap-2">
                                             {selectedSubPeriod === SubPeriodType.annually && (
                                                 <span className="text-sm text-gray-400 line-through">
@@ -175,7 +175,7 @@ export default function SubscriptionModal({defaultSub, onClose}: SubscriptionPro
                                                 <div className="font-medium">{sub.name}</div>
                                                 <div className="flex items-baseline gap-1 sm:justify-center sm:mt-1">
                                                     <AnimatedDouble value={price} prefix={"$"} className={`text-sm ${isSelected ? '' : 'text-gray-600'}`}/>
-                                                    <span className={`text-sm ${isSelected ? '' : 'text-gray-600'}`}>/ mo</span>
+                                                    <span className={`text-sm ${isSelected ? '' : 'text-gray-600'}`}>/ {globalContext.localized(Dictionary.pricingMo)}</span>
                                                 </div>
                                             </button>
                                         );
@@ -192,7 +192,7 @@ export default function SubscriptionModal({defaultSub, onClose}: SubscriptionPro
                                     {purchasing ? (
                                         <Loader2 className="animate-spin w-5 h-5"/>
                                     ) : (
-                                        <span className="text-sm font-medium">Purchase</span>
+                                        <span className="text-sm font-medium">{globalContext.localized(Dictionary.subPurchase)}</span>
                                     )}
                                 </button>
 

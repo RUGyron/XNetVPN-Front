@@ -39,40 +39,6 @@ export default function ProfileModal({showed, onClose, onSubChosen}: ProfileProp
         }
     }, [showed, updateProfile])
 
-    const connectedDevicesBlock = (
-        <div className="bg-gray-50 p-4 rounded-lg">
-            <h3 className="font-semibold mb-2">Connected Devices</h3>
-
-            <div className="max-h-[16vh] overflow-y-auto space-y-2 pr-1 custom-scroll">
-                {globalContext.profile && globalContext.profile.devices.length > 0 ? (
-                    globalContext.profile.devices.map((device, i) => (
-                        <div key={i} className="flex justify-between items-center">
-                            <div className="flex items-center">
-                                <img
-                                    src={getDeviceIcon(device.type)}
-                                    className="w-5 h-5 mr-2"
-                                    alt={device.type}
-                                />
-                                <span
-                                    className="truncate overflow-hidden text-ellipsis max-w-[200px]">
-                                                            {device.name}
-                                                        </span>
-                            </div>
-                            <button className="text-sm text-red-600 hover:underline">
-                                Disconnect
-                            </button>
-                        </div>
-                    ))
-                ) : (
-                    <p className="text-sm text-gray-600">
-                        {globalContext.localized(Dictionary.noConnectedDevices)}
-                    </p>
-                )
-                }
-            </div>
-        </div>
-    )
-
     function onSignOut() {
         globalContext.setLoggedIn(false)
         globalContext.setProfile(null)
@@ -118,7 +84,7 @@ export default function ProfileModal({showed, onClose, onSubChosen}: ProfileProp
                                 className="bg-gray-100 w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center">
                                 <User className="w-12 h-12 text-gray-600"/>
                             </div>
-                            <h2 className="text-2xl font-bold">Profile</h2>
+                            <h2 className="text-2xl font-bold">{globalContext.localized(Dictionary.profileTitle)}</h2>
                             <p
                                 onClick={async () => {
                                     await navigator.clipboard.writeText(globalContext.profile?.id ?? '')
@@ -134,7 +100,7 @@ export default function ProfileModal({showed, onClose, onSubChosen}: ProfileProp
 
                         <div className="space-y-6">
                             <div className="bg-gray-50 p-4 rounded-lg">
-                                <h3 className="font-semibold mb-2">Current Plan</h3>
+                                <h3 className="font-semibold mb-2">{globalContext.localized(Dictionary.profileCurrentPlan)}</h3>
                                 {globalContext.profile?.subscription ? (() => {
                                     const sub = globalContext.profile?.subscription
                                     const profile = globalContext.profile
@@ -144,38 +110,68 @@ export default function ProfileModal({showed, onClose, onSubChosen}: ProfileProp
                                         <div className="flex justify-between items-end">
                                             <div>
                                                 <p className="font-bold">{globalContext.profile?.subscription.name ?? ""}</p>
-                                                <p className="text-sm text-gray-600">Next billing date: {formatDateReadable(endDate, globalContext.language)}</p>
+                                                <p className="text-sm text-gray-600">{globalContext.localized(Dictionary.profileNextBilling)}: {formatDateReadable(endDate, globalContext.language)}</p>
                                             </div>
                                             <button className="text-sm text-black hover:underline">
-                                                Unsubscribe
+                                                {globalContext.localized(Dictionary.profileUnsubscribe)}
                                             </button>
                                         </div>
                                     )
-                                })(): (
+                                })() : (
                                     <button
-                                    onClick={onSubChosen}
-                                 className={`w-full rounded-lg transition flex items-center justify-center h-10 ${processing ? 'bg-gray-700 text-white cursor-not-allowed' : 'bg-black text-white hover:bg-gray-800'}`}
-                            >
-                                <span className="text-sm font-medium">Explore</span>
-                            </button>
-                            )}
-                        </div>
+                                        onClick={onSubChosen}
+                                        className={`w-full rounded-lg transition flex items-center justify-center h-10 ${processing ? 'bg-gray-700 text-white cursor-not-allowed' : 'bg-black text-white hover:bg-gray-800'}`}
+                                    >
+                                        <span className="text-sm font-medium">{globalContext.localized(Dictionary.profileExplore)}</span>
+                                    </button>
+                                )}
+                            </div>
 
-                        {connectedDevicesBlock}
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                                <h3 className="font-semibold mb-2">{globalContext.localized(Dictionary.profileConnectedDevices)}</h3>
 
-                        <div className="flex justify-end space-x-4">
-                            <button
-                                onClick={onSignOut}
-                                className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition">
-                                Sign Out
-                            </button>
+                                <div className="max-h-[16vh] overflow-y-auto space-y-2 pr-1 custom-scroll">
+                                    {globalContext.profile && globalContext.profile.devices.length > 0 ? (
+                                        globalContext.profile.devices.map((device, i) => (
+                                            <div key={i} className="flex justify-between items-center">
+                                                <div className="flex items-center">
+                                                    <img
+                                                        src={getDeviceIcon(device.type)}
+                                                        className="w-5 h-5 mr-2"
+                                                        alt={device.type}
+                                                    />
+                                                    <span
+                                                        className="truncate overflow-hidden text-ellipsis max-w-[200px]">
+                                                            {device.name}
+                                                        </span>
+                                                </div>
+                                                <button className="text-sm text-red-600 hover:underline">
+                                                    {globalContext.localized(Dictionary.profileDisconnectDevice)}
+                                                </button>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <p className="text-sm text-gray-600">
+                                            {globalContext.localized(Dictionary.noConnectedDevices)}
+                                        </p>
+                                    )
+                                    }
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end space-x-4">
+                                <button
+                                    onClick={onSignOut}
+                                    className="px-4 h-10 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition">
+                                    {globalContext.localized(Dictionary.profileSignOut)}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </motion.div>
-        </motion.div>
-</>
-)
-    ;
+        </>
+    )
+        ;
 }

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, createContext, useMemo} from 'react'
+import React, {createContext, useEffect, useMemo, useState} from 'react'
 import {ProfileModel} from "../models/ProfileModel.tsx"
 import fetchAndHandleProfile from "./fetchAndHandleProfile.tsx";
 import fetchSubscriptions from "../api/subscriptions.tsx";
@@ -42,7 +42,7 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
     const [profile, setProfile] = useState<null | ProfileModel>(null)
     const [subscriptions, setSubscriptions] = useState<null | SubscriptionsModel>(null)
     const [loading, setLoading] = useState(true)
-    const [language, setLanguage] = useState<Language>(Language.english)
+    const [language, setLanguage] = useState<Language>(navigator.language.startsWith('ru') ? Language.russian : Language.english)
     const localized = useMemo(() => createLocalizer(language), [language])
 
     const handleSubscriptions = async () => {

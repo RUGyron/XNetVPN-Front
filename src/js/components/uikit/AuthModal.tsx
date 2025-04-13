@@ -1,5 +1,5 @@
 import {FormEvent, useEffect, useRef, useState} from "react"
-import {X, Loader2} from "lucide-react"
+import {X, Loader2, Copy} from "lucide-react"
 import Config from "../../utils/Config.tsx"
 // import {useNavigate} from "react-router-dom"
 import {useGlobalContext} from "../../utils/useGlobalProvider.tsx"
@@ -79,27 +79,54 @@ export default function AuthModal({showed, onClose, onAuth}: AuthProps) {
                 </button>
 
                 <div className="text-center mb-8">
-                    <h2 className="text-2xl font-bold mb-2">Access Key</h2>
-                    <p className="text-gray-600">Enter your key to access the VPN</p>
+                    <h2 className="text-2xl font-bold mb-2">{globalContext.localized(Dictionary.authTitle)}</h2>
+                    <p className="text-gray-600">{globalContext.localized(Dictionary.authSubTitle)}</p>
                 </div>
 
                 <form className="space-y-4" onSubmit={onLoginSubmit}>
                     <div>
-                        <input
-                            type="text"
-                            className={`
-    w-full px-4 py-2 rounded-lg transition
-    ${errorKey
-                                ? 'border border-red-500 focus:border-red-600'
-                                : 'border border-gray-300 focus:border-gray-500'}
-  `}
-                            placeholder="Enter your access key"
-                            value={key}
-                            onChange={(e) => {
-                                setKey(e.target.value)
-                                setErrorKey('')
-                            }}
-                        />
+                        <div className="relative">
+                            <input
+                                type="text"
+                                className={`w-full pr-24 px-4 py-2 rounded-lg transition ${errorKey ? 'border border-red-500 focus:border-red-600' : 'border border-gray-300 focus:border-gray-500'}`}
+                                placeholder={globalContext.localized(Dictionary.authPlaceholder)}
+                                value={key}
+                                onChange={(e) => {
+                                    setKey(e.target.value)
+                                    setErrorKey('')
+                                }}
+                            />
+                            <button
+                                type="button"
+                                onClick={async () => {
+                                    if (key) {
+                                        setKey('')
+                                    } else {
+                                        try {
+                                            const text = await navigator.clipboard.readText()
+                                            setKey(text)
+                                        } catch {
+                                            // fallback
+                                        }
+                                    }
+                                }}
+                                className="absolute top-1 right-1 h-[calc(100%-0.5rem)] px-3 flex items-center justify-center rounded-md text-black bg-white hover:bg-gray-100 transition"
+                            >
+                                {key ? (
+                                    <>
+                                        <X className="w-4 h-4 mr-1"/>
+                                        <span
+                                            className="text-sm font-medium">{globalContext.localized(Dictionary.authClear)}</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Copy className="w-4 h-4 mr-1"/>
+                                        <span
+                                            className="text-sm font-medium">{globalContext.localized(Dictionary.authPaste)}</span>
+                                    </>
+                                )}
+                            </button>
+                        </div>
                         <div
                             className={`text-sm text-red-500 mt-1 overflow-hidden transition-all duration-300 ${errorKey ? 'max-h-6 opacity-100' : 'max-h-0 opacity-0'}`}>
                             {errorKey || '\u00A0'}
@@ -108,12 +135,12 @@ export default function AuthModal({showed, onClose, onAuth}: AuthProps) {
 
                     <div className="flex items-center my-4">
                         <div className="flex-grow border-t border-gray-300"></div>
-                        <span className="mx-4 text-gray-400 text-sm">OR</span>
+                        <span className="mx-4 text-gray-400 text-sm">{globalContext.localized(Dictionary.authOr)}</span>
                         <div className="flex-grow border-t border-gray-300"></div>
                     </div>
 
                     <div className="mt-6 text-center text-sm text-gray-600">
-                        New user? A key will be generated for you automatically.
+                        {globalContext.localized(Dictionary.authNewUser)}
                     </div>
 
                     <button
@@ -124,19 +151,20 @@ export default function AuthModal({showed, onClose, onAuth}: AuthProps) {
                         {processing ? (
                             <Loader2 className="animate-spin w-5 h-5"/>
                         ) : (
-                            <span className="text-sm font-medium">Sign In</span>
+                            <span
+                                className="text-sm font-medium">{globalContext.localized(Dictionary.heroSignInButton)}</span>
                         )}
                     </button>
                 </form>
 
                 <div className="mt-6 pt-6 text-xs text-center text-gray-500 border-t">
-                    By continuing, you agree to our{" "}
+                    {globalContext.localized(Dictionary.authAgreement)}{" "}
                     <a
                         href={Config.urls.terms}
                         target="_blank"
                         className="underline hover:text-black"
                     >
-                        Terms of Service
+                        {globalContext.localized(Dictionary.authAgreement2)}
                     </a>
                 </div>
             </motion.div>
