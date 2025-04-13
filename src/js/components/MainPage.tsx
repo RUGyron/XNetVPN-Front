@@ -409,6 +409,7 @@ function MainPage() {
                                 <li>{globalContext.localized(Dictionary.legalEmail)}: <a className="hover:text-gray-300 transition"
                                               href={"mailto:support@xnetapps.com"}>support@xnetapps.com</a></li>
                                 <li>{globalContext.localized(Dictionary.legalAddress)}</li>
+                                <li>{globalContext.localized(Dictionary.legalTIN)}: 183208089374</li>
                             </ul>
                         </div>
                     </div>

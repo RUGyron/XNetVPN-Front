@@ -247,6 +247,10 @@ export const Dictionary = {
         ru: 'Адрес: Улица 53 Никола Думана, Ереван, Армения, 0001',
         en: 'Address: 53 Nikola Dumana Street, Yerevan, Armenia, 0001',
     },
+    legalTIN: {
+        ru: 'ИНН',
+        en: 'TIN',
+    },
     legalRights: {
         ru: '© 2025 XNet VPN. Все права защищены.',
         en: '© 2025 XNet VPN. All rights reserved.',
