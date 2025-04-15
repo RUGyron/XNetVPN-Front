@@ -251,6 +251,10 @@ export const Dictionary = {
         ru: 'ИНН',
         en: 'TIN',
     },
+    legalFullName: {
+        ru: 'Пивош В. Д.',
+        en: 'Pivosh',
+    },
     legalRights: {
         ru: '© 2025 XNet VPN. Все права защищены.',
         en: '© 2025 XNet VPN. All rights reserved.',
