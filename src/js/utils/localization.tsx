@@ -36,16 +36,6 @@ export const Dictionary = {
     // Subscriptions Benefits
     //
 
-    // Content
-    subsExploreBenefits1: {
-        ru: 'Изучите все преимущества',
-        en: 'Explore all benefits',
-    },
-    subsExploreBenefits2: {
-        ru: 'здесь',
-        en: 'here',
-    },
-
     // Basic
     subBasicBenefit1: {
         ru: 'Базовый Набор Стран',
@@ -273,6 +263,8 @@ export const Dictionary = {
         ru: 'Мы не собираем персональные данные пользователей. Единственная информация — список подключенных устройств, используемая исключительно в целях аналитики и улучшения соединения. Мы не видим и не храним данные платежей. Все реквизиты вводятся через стороннюю систему эквайринга.',
         en: 'We do not collect personal user data. The only information processed is the list of connected devices, used strictly for analytics and connection optimization. We do not see or store your payment details — all payments go through a third-party acquiring service.',
     },
+
+    // Terms
     termsTitle: {
         ru: 'Пользовательское Соглашение',
         en: 'Terms of Use',
@@ -281,6 +273,8 @@ export const Dictionary = {
         ru: 'Вы соглашаетесь использовать XNet VPN исключительно в легальных целях. Сервис обеспечивает безопасное подключение, выбор серверов на основе геолокации, и не собирает ваши личные данные за исключением информации о подключенных устройствах. Управление подпиской доступно в личном кабинете. Продукт предоставляется «как есть».',
         en: 'You agree to use XNet VPN for lawful purposes only. The service provides secure connection, geo-based server selection, and collects no personal data except information about connected devices. Subscription management is available in your account. The product is provided “as is”.',
     },
+
+    // Refund
     refundTitle: {
         ru: 'Политика Возвратов',
         en: 'Refund Policy',
@@ -296,6 +290,113 @@ export const Dictionary = {
     policyBack: {
         ru: 'Назад',
         en: 'Back',
+    },
+
+    // Offer
+
+    offerTitle: {
+        ru: "Публичная оферта",
+        en: "Public Offer"
+    },
+    offerIntro: {
+        ru: "Настоящая оферта содержит условия предоставления подписок сервисом XNet VPN.",
+        en: "This public offer outlines the terms of subscription for the XNet VPN service."
+    },
+    offerPlans: {
+        ru: "Подписки доступны в тарифах Basic, Pro и Unlimited. Оплата возможна ежемесячно или ежегодно.",
+        en: "Subscriptions are available in Basic, Pro, and Unlimited plans. Payment can be monthly or yearly."
+    },
+    offerConsent: {
+        ru: "Оформляя подписку, вы соглашаетесь на автоматическое регулярное списание средств согласно выбранному тарифу.",
+        en: "By subscribing, you agree to automatic regular billing according to the selected plan."
+    },
+    offerManage: {
+        ru: "Вы можете управлять подпиской или отменить её в любой момент через личный кабинет или обратившись в поддержку.",
+        en: "You can manage or cancel your subscription anytime via the personal account or by contacting support."
+    },
+    offerContact: {
+        ru: "По вопросам и поддержке обращайтесь: support@xnetapps.com. ИНН: Пивош В. Д. 183208089374",
+        en: "For questions and support, contact: support@xnetapps.com. INN: Pivosh V.D. 183208089374"
+    },
+    offerSection1Title: {
+        ru: "1. Активация автоплатежей",
+        en: "1. Auto-payment Activation"
+    },
+    offerSection1Text: {
+        ru: "1.1. Автоплатежи активируются при оформлении подписки на платный тариф XNet VPN через YooKassa.\n1.2. При подписке пользователь:\n• соглашается на регулярное автоматическое списание;\n• выбирает способ оплаты (карта, СБП, Tinkoff Pay, SberPay и т.д.);\n• подтверждает владение указанным способом оплаты.\n\n1.3. Тарифы:\n• Basic — $5 / месяц или $50 / год\n• Pro — $10 / месяц или $100 / год\n• Unlimited — $20 / месяц или $200 / год",
+        en: "1.1. Auto-payments are enabled upon subscribing to a paid XNet VPN plan via YooKassa.\n1.2. By subscribing, the user:\n• agrees to regular automatic billing;\n• selects a payment method (card, SBP, Tinkoff Pay, SberPay, etc.);\n• confirms ownership of the selected payment method.\n\n1.3. Plans:\n• Basic — $5 / month or $50 / year\n• Pro — $10 / month or $100 / year\n• Unlimited — $20 / month or $200 / year"
+    },
+    offerSection2Title: {
+        ru: "2. Отключение автоплатежей",
+        en: "2. Auto-payment Deactivation"
+    },
+    offerSection2Text: {
+        ru: "2.1. Вы можете отключить автоплатежи:\n• в личном кабинете XNet VPN;\n• или написав на email: support@xnetapps.com.\n\n2.2. Новые списания не производятся, доступ сохраняется до конца оплаченного периода.\nВозврат за оставшийся срок не предусмотрен.",
+        en: "2.1. You can disable auto-payments:\n• in your XNet VPN dashboard;\n• or by emailing: support@xnetapps.com.\n\n2.2. No new charges will occur, but access remains until the current billing cycle ends.\nNo refunds for the remaining period."
+    },
+    offerSection3Title: {
+        ru: "3. Прочее",
+        en: "3. Other"
+    },
+    offerSection3Text: {
+        ru: "3.1. Обработка платёжных данных осуществляется исключительно YooKassa.\n3.2. Актуальная версия оферты размещена на официальном сайте.",
+        en: "3.1. Payment data is processed exclusively by YooKassa.\n3.2. The latest version of this agreement is available on the official website."
+    },
+    offerSection1_1: {
+        ru: "1.1. Автоплатежи активируются при оформлении подписки на платный тариф XNet VPN через YooKassa.",
+        en: "1.1. Auto-payments are enabled upon subscribing to a paid XNet VPN plan via YooKassa.",
+    },
+    offerSection1_2: {
+        ru: "1.2. Пользователь:",
+        en: "1.2. The user:",
+    },
+    offerSection1_2_1: {
+        ru: "соглашается на регулярное автоматическое списание;",
+        en: "agrees to regular automatic billing;",
+    },
+    offerSection1_2_2: {
+        ru: "выбирает способ оплаты (карта, СБП, Тинькофф Пэй, СберПэй и др.);",
+        en: "selects a payment method (card, SBP, Tinkoff Pay, SberPay, etc.);",
+    },
+    offerSection1_2_3: {
+        ru: "подтверждает владение указанным способом оплаты.",
+        en: "confirms ownership of the selected payment method.",
+    },
+    offerSection1_3: {
+        ru: "1.3. Тарифы:",
+        en: "1.3. Plans:",
+    },
+    offerSection1_3_1: {
+        ru: "Basic — $5 в месяц или $50 в год;",
+        en: "Basic — $5 / month or $50 / year;",
+    },
+    offerSection1_3_2: {
+        ru: "Pro — $10 в месяц или $100 в год;",
+        en: "Pro — $10 / month or $100 / year;",
+    },
+    offerSection1_3_3: {
+        ru: "Unlimited — $20 в месяц или $200 в год.",
+        en: "Unlimited — $20 / month or $200 / year.",
+    },
+    offerSection2_1: {
+        ru: "2.1. Вы можете отключить автоплатежи:",
+        en: "2.1. You can disable auto-payments:",
+    },
+    offerSection2_1_1: {
+        ru: "в личном кабинете XNet VPN;",
+        en: "in your XNet VPN dashboard;",
+    },
+    offerSection2_1_2: {
+        ru: "или написав на email: support@xnetapps.com.",
+        en: "or by emailing: support@xnetapps.com.",
+    },
+    offerSection2_2: {
+        ru: "2.2. Новые списания не будут производиться, но доступ останется до конца оплаченного периода. Возвратов за оставшееся время не предусмотрено.",
+        en: "2.2. No new charges will occur, but access remains until the current billing cycle ends. No refunds for the remaining period.",
+    },
+    offerSection3_1: {
+        ru: "3.1. Обработка платёжных данных осуществляется исключительно YooKassa.",
+        en: "3.1. Payment data is processed exclusively by YooKassa.",
     },
 
     //
@@ -398,6 +499,14 @@ export const Dictionary = {
     subPurchase: {
         ru: 'Купить',
         en: 'Purchase',
+    },
+    subOffer: {
+        ru: 'Продолжая покупку, вы соглашаетесь с условиями',
+        en: 'Continuing the purchase, you agree with the terms of the',
+    },
+    subOfferLink: {
+        ru: 'оферты',
+        en: 'offer',
     },
     subExploreAll: {
         ru: 'Изучить все преимущества',

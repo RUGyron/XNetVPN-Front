@@ -1,9 +1,11 @@
 const Config = {
     urls: {
         main: '/',
+        pricing: '/#pricing',
         terms: '/privacy-terms/#terms',
         policy: '/privacy-terms',
         refund: '/privacy-terms/#refund',
+        offer: '/offer',
     },
     imgPath: '../img/',
     api: {

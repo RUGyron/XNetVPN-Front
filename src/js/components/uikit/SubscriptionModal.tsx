@@ -152,7 +152,8 @@ export default function SubscriptionModal({defaultSub, onClose}: SubscriptionPro
                                                     $ {selectedSub && selectedSub?.monthPrice * 12}
                                                 </span>
                                             )}
-                                            {currentPrice && <AnimatedDouble value={currentPrice} prefix={"$"} className={"text-lg font-semibold text-black"}/>}
+                                            {currentPrice && <AnimatedDouble value={currentPrice} prefix={"$"}
+                                                                             className={"text-lg font-semibold text-black"}/>}
                                         </span>
                                     </div>
                                 </div>
@@ -174,8 +175,10 @@ export default function SubscriptionModal({defaultSub, onClose}: SubscriptionPro
                                             >
                                                 <div className="font-medium">{sub.name}</div>
                                                 <div className="flex items-baseline gap-1 sm:justify-center sm:mt-1">
-                                                    <AnimatedDouble value={price} prefix={"$"} className={`text-sm ${isSelected ? '' : 'text-gray-600'}`}/>
-                                                    <span className={`text-sm ${isSelected ? '' : 'text-gray-600'}`}>/ {globalContext.localized(Dictionary.pricingMo)}</span>
+                                                    <AnimatedDouble value={price} prefix={"$"}
+                                                                    className={`text-sm ${isSelected ? '' : 'text-gray-600'}`}/>
+                                                    <span
+                                                        className={`text-sm ${isSelected ? '' : 'text-gray-600'}`}>/ {globalContext.localized(Dictionary.pricingMo)}</span>
                                                 </div>
                                             </button>
                                         );
@@ -184,28 +187,42 @@ export default function SubscriptionModal({defaultSub, onClose}: SubscriptionPro
 
                                 {/* Purchase */}
 
-                                <button
-                                    onClick={purchaseSubmit}
-                                    disabled={purchasing}
-                                    className={`w-full rounded-lg transition flex items-center justify-center h-10 ${processing ? 'bg-gray-700 text-white cursor-not-allowed' : 'bg-black text-white hover:bg-gray-800'}`}
-                                >
-                                    {purchasing ? (
-                                        <Loader2 className="animate-spin w-5 h-5"/>
-                                    ) : (
-                                        <span className="text-sm font-medium">{globalContext.localized(Dictionary.subPurchase)}</span>
-                                    )}
-                                </button>
+                                <div>
+                                    <button
+                                        onClick={purchaseSubmit}
+                                        disabled={purchasing}
+                                        className={`w-full rounded-lg transition flex items-center justify-center h-10 ${processing ? 'bg-gray-700 text-white cursor-not-allowed' : 'bg-black text-white hover:bg-gray-800'}`}
+                                    >
+                                        {purchasing ? (
+                                            <Loader2 className="animate-spin w-5 h-5"/>
+                                        ) : (
+                                            <span
+                                                className="text-sm font-medium">{globalContext.localized(Dictionary.subPurchase)}</span>
+                                        )}
+                                    </button>
+
+                                    <div className="mt-1 pt-1 text-xs text-center text-gray-500">
+                                        {`${globalContext.localized(Dictionary.subOffer)} `}
+                                        <a
+                                            href={Config.urls.offer}
+                                            target="_blank"
+                                            className="underline hover:text-black"
+                                        >
+                                            {globalContext.localized(Dictionary.subOfferLink)}
+                                        </a>
+                                    </div>
+                                </div>
 
                                 {/* Explore plans */}
 
                                 <div className="mt-6 pt-6 text-xs text-center text-gray-500 border-t">
-                                    {`${globalContext.localized(Dictionary.subsExploreBenefits1)} `}
+                                    {`${globalContext.localized(Dictionary.subExploreAll)} `}
                                     <a
-                                        href={`${Config.urls.main}#pricing`}
+                                        href={Config.urls.pricing}
                                         target="_blank"
                                         className="underline hover:text-black"
                                     >
-                                        {globalContext.localized(Dictionary.subsExploreBenefits2)}
+                                        {globalContext.localized(Dictionary.subExploreAllHere)}
                                     </a>
                                 </div>
                             </div>
